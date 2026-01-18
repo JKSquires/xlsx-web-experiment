@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>XLSX Experiment</title>
+
+<link rel="icon" type="image/png" href="/icon.png">
+
+<style>
+div {
+	border: 2px #000 solid;
+	padding: 1em;
+}
+</style>
+</head>
+<body>
+<p>File Name: <textarea id="file_name">sheet.xlsx</textarea></p>
+
+<div id="sheet_area"></div>
+<button onclick="addSheet()">Add Sheet</button>
+
+<br><br>
+
+<button onclick="buildXLSX()">Build XLSX</button>
+<script src="./scripts.js"></script>
+</body>
+</html>
