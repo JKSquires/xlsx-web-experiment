@@ -69,7 +69,6 @@ function createZIP(files) {
 		name: file.name,
 		data: file.data,
 		crc: calcCRC32(new Uint8Array(file.data)),
-		is_dir: false,
 		local_header_offset: null
 	}));
 
@@ -87,19 +86,14 @@ function createZIP(files) {
 		write4B(rw_header, 0, 0x04034B50);
 		// file name length
 		write2B(rw_header, 26, file.name.length);
-		if (file.is_dir) {
-			// version needed to extract
-			rw_header[4] = 20; // 2.0
-		} else {
-			// version needed to extract
-			rw_header[4] = 10; // 1.0
-			// crc-32
-			write4B(rw_header, 14, file.crc);
-			// compressed size
-			write4B(rw_header, 18, file.data.byteLength);
-			// uncompressed size
-			write4B(rw_header, 22, file.data.byteLength);
-		}
+		// version needed to extract
+		rw_header[4] = 10; // 1.0
+		// crc-32
+		write4B(rw_header, 14, file.crc);
+		// compressed size
+		write4B(rw_header, 18, file.data.byteLength);
+		// uncompressed size
+		write4B(rw_header, 22, file.data.byteLength);
 
 		file.local_header_offset = offset_count;
 		zip_data.push(header);
@@ -126,23 +120,16 @@ function createZIP(files) {
 		write2B(rw_header, 28, file.name.length);
 		// relative offset of local header
 		write4B(rw_header, 42, file.local_header_offset);
-		if (file.is_dir) {
-			// version needed to extract
-			rw_header[6] = 20; // 2.0
-			// external file attributes
-			write2B(rw_header, 40, 0o00040755); // UNIX file permissions: drwxr-xr-x
-		} else {
-			// version needed to extract
-			rw_header[6] = 10; // 1.0
-			// crc-32
-			write4B(rw_header, 16, file.crc);
-			// compressed size
-			write4B(rw_header, 20, file.data.byteLength);
-			// uncompressed size
-			write4B(rw_header, 24, file.data.byteLength);
-			// external file attributes
-			write2B(rw_header, 40, 0o00100644); // UNIX file permissions: -rw-r--r--
-		}
+		// version needed to extract
+		rw_header[6] = 10; // 1.0
+		// crc-32
+		write4B(rw_header, 16, file.crc);
+		// compressed size
+		write4B(rw_header, 20, file.data.byteLength);
+		// uncompressed size
+		write4B(rw_header, 24, file.data.byteLength);
+		// external file attributes
+		write2B(rw_header, 40, 0o00100644); // UNIX file permissions: -rw-r--r--
 
 		zip_data.push(header);
 		offset_count += header.byteLength;
@@ -193,7 +180,6 @@ Globals Used:
 - sheets
 Side-Effects:
 - Updates `sheet_area` inner HTML
-- Creates numerous HTML elements and functions
 Return: (undefined) */
 function displaySheets() {
 	sheet_area.innerHTML = "";
@@ -253,7 +239,7 @@ Globals Used:
 - sheets
 Side-Effects:
 - Updates `sheets` with new sheet
-- Calls `displaySheets()` function
+- Calls `displaySheets` function
 Return: (undefined) */
 function addSheet() {
 	sheets.push(createSheet(sheets.length + 1));
