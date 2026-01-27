@@ -166,7 +166,7 @@ Parameters:
 Return: (Object)
   Object with the following properties:
   - value (string): Worksheet data
-  - name (string): Worhseet name */
+  - name (string): Worksheet name */
 function createSheet(id, def_value = "<sheetData>\n</sheetData>") {
 	return {
 		value: def_value,
